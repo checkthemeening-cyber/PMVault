@@ -1,7 +1,11 @@
 # 日経ニュース収集・サマリスキル
 
 このスキルは日経新聞サイト（nikkei.com）から5カテゴリのニュースを収集・サマリし、
-`C:\Users\check\PMVault\nikkei-news\` 以下にMarkdownファイルとして記録する。
+Markdownファイルとして記録する。
+
+**保存パス:**
+- ローカル実行時: `C:\Users\check\PMVault\nikkei-news\`
+- クラウド実行時: リポジトリルートからの相対パス `nikkei-news/`
 
 ## 監視カテゴリとURL
 
@@ -24,20 +28,20 @@
 ## 保存先ディレクトリ構造
 
 ```
-C:\Users\check\PMVault\nikkei-news\
-  daily\
-    YYYY\
-      MM\
-        DD\
+nikkei-news/
+  daily/
+    YYYY/
+      MM/
+        DD/
           資源エネルギー.md
           建設・不動産.md
           物流・運輸.md
           商社・卸売り.md
           自動車.md
-  monthly\
-    YYYY\
+  monthly/
+    YYYY/
       MM_summary.md    （例: 06_summary.md）
-  yearly\
+  yearly/
     YYYY_summary.md    （例: 2026_summary.md）
 ```
 
