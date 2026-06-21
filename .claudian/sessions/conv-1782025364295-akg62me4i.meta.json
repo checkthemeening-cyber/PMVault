@@ -1,0 +1,23 @@
+{
+  "id": "conv-1782025364295-akg62me4i",
+  "providerId": "claude",
+  "title": "Respond to Japanese greeting",
+  "titleGenerationStatus": "success",
+  "createdAt": 1782025364302,
+  "updatedAt": 1782029601001,
+  "lastResponseAt": 1782029601001,
+  "sessionId": "00d01d31-d308-4944-88c6-d5c1d17d5667",
+  "providerState": {
+    "providerSessionId": "00d01d31-d308-4944-88c6-d5c1d17d5667"
+  },
+  "usage": {
+    "model": "haiku",
+    "inputTokens": 10,
+    "cacheCreationInputTokens": 413,
+    "cacheReadInputTokens": 56555,
+    "contextWindow": 200000,
+    "contextTokens": 56978,
+    "percentage": 28,
+    "contextWindowIsAuthoritative": true
+  }
+}
