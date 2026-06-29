@@ -1,0 +1,19 @@
+﻿[2026-06-29 21:16:12] nikkei-news evening start
+claude.exe : Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdi
+n explicitly: < /dev/null to skip, or wait longer.
+At C:\Users\check\PMVault\.claude\scripts\nikkei-evening.ps1:5 char:1
++ & "C:\Users\check\.local\bin\claude.exe" --dangerously-skip-permissio ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Warning: no std...or wait longer.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+eveningモードの実行が完了しました。本日（2026年6月29日）の朝のファイルが存在しなかったため、全件収集として5カテゴリのファイルを新規作成・コミットしました。
+
+| カテゴリ | 記事数 | 主なトピック |
+|---|---|---|
+| 資源エネルギー | 4件 | 九電×政投銀の太陽光合弁、IHIアンモニアバーナー、ガソリン補助金調整 |
+| 建設・不動産 | 3件 | YKKAPサッシ10〜15%値上げ、大成建設3000億円融資枠 |
+| 物流・運輸 | 3件 | 福岡タクシー値上げ、ロート製薬自動運転トラック実証450km |
+| 商社・卸売り | 1件 | NTT東日本が中古EVリース参入 |
+| 自動車 | 3件 | ティアフォー7月上場、いすゞ電動拠点稼働、トヨタAI仕様書統一 |
+[2026-06-29 21:18:58] nikkei-news evening done. exit=0
