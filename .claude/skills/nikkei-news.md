@@ -274,6 +274,63 @@ morning モードと同様に今日の日付（YYYY, MM, DD）を確認する。
 
 ---
 
+## Python 実装による自動実行
+
+### スクリプト情報
+- **ファイル**: `C:\Users\check\PMVault\.claude\scripts\nikkei-news.py`
+- **言語**: Python 3
+
+### 実行方法
+```bash
+python nikkei-news.py [mode]
+```
+
+### 実行例
+
+```bash
+# morning モード（デフォルト）
+python nikkei-news.py morning
+python nikkei-news.py
+
+# evening モード
+python nikkei-news.py evening
+
+# monthly モード
+python nikkei-news.py monthly
+
+# yearly モード
+python nikkei-news.py yearly
+```
+
+### 実装の特徴
+
+1. **日付フィルタの厳格な適用**: 当日の記事のみを抽出
+2. **有料記事対応**: ペイウォール記事は見出しのみを記録
+3. **エラーハンドリング**: ページ取得失敗時は代替手段を検討
+4. **マークダウン形式**: スキル定義に従った形式で出力
+5. **JST対応**: システムのUTC時刻を自動的にJSTに変換
+
+### 処理フロー
+
+**morning モード:**
+1. 当日のニュースを5カテゴリから収集
+2. `nikkei-news/daily/YYYY/MM/DD/{カテゴリ}.md` に保存
+
+**evening モード:**
+1. 朝のファイルから既収集URLを抽出
+2. 新規記事のみを差分として取得
+3. 既存ファイルに追記
+
+**monthly モード:**
+1. 前月（現在の月の1か月前）の日次ファイルを集約
+2. `nikkei-news/monthly/YYYY/MM_summary.md` に保存
+
+**yearly モード:**
+1. 前年の月次ファイルを集約
+2. `nikkei-news/yearly/YYYY_summary.md` に保存
+
+---
+
 ## 注意事項
 
 - **日付フィルタは厳格に適用する**: 今日の日付と一致しない記事は除外する。相対表示（「〇時間前」等）は今日の記事として扱う
