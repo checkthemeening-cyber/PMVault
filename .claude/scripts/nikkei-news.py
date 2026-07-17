@@ -253,6 +253,10 @@ def extract_article_body(html: str) -> Dict[str, str]:
         subtitle = parser.subtitle.strip()
         is_member_only = parser.is_member_only
 
+        # subtitle が「NIKKEI Prime」や「有料記事」などのメタテキストの場合は削除
+        if any(x in subtitle for x in ['NIKKEI Prime', '【有料記事】', 'プレミアム']):
+            subtitle = ""
+
         # BeautifulSoup で本文を抽出（複数の p タグを結合）
         soup = BeautifulSoup(html, 'html.parser')
         p_tags = soup.find_all('p')
@@ -504,12 +508,9 @@ class NikkeiNewsCollector:
         entry += f"**公開日時**: {article['date']} {article['time']}\n"
         entry += f"**URL**: {article['url']}\n\n"
 
-        if article['is_paid']:
-            entry += f"**【有料記事】**\n\n"
-
         # リード文
         if article.get('summary'):
-            entry += f"> {article['summary']}\n\n"
+            entry += f"{article['summary']}\n\n"
 
         # 本文
         body = article.get('body', '')
@@ -666,20 +667,27 @@ class NikkeiNewsCollector:
         print(f"  保存完了: {file_path}")
 
     def _generate_summary(self, category_name: str, articles: List[Dict]) -> str:
-        """記事からサマリを生成（モック実装）"""
+        """記事からサマリを生成（実際の記事内容から抽出）"""
         if not articles:
             return "本日の新着記事はありません"
 
-        # シンプルなサマリテンプレート
-        summaries = {
-            "資源エネルギー": "エネルギー市場では供給面での課題と価格動向が引き続き注目されている。脱炭素化への取り組みと国際的なエネルギー情勢のバランスが、今後の業界動向を左右する重要な要素となっている。",
-            "建設・不動産": "不動産市場ではテレワーク普及に伴う用途転換と、都市開発の再構想が進行中。供給過剰地域と需要地域の二極化が進展している。",
-            "物流・運輸": "物流業界は人材不足と運送コスト上昇という二重の課題に直面。効率化投資と待遇改善が急務となっており、業界全体の構造改革が加速している。",
-            "商社・卸売り": "商社セクターでは脱炭素化と新興市場への事業展開が経営戦略の中核へシフト。従来の商取引モデルから機能転換を迫られている。",
-            "自動車": "自動車業界ではEV化と自動運転技術開発が経営資源の集約先。競争の激化に伴い、産業再編の可能性も高まっている。"
-        }
+        # 最初の 1-2 記事の本文から要約文を抽出
+        summary_texts = []
+        for article in articles[:2]:
+            body = article.get('body', '').strip()
+            if body:
+                # 本文の最初の 1 文を抽出（。で区切られる）
+                first_sentence = body.split('。')[0] + '。'
+                if len(first_sentence) > 15:  # 最低限の長さチェック
+                    summary_texts.append(first_sentence)
 
-        return summaries.get(category_name, "本日のニュース動向をご確認ください")
+        if summary_texts:
+            # 複数の記事の第 1 文を結合
+            return ''.join(summary_texts)
+        else:
+            # フォールバック: 記事タイトルのみ
+            titles = [a.get('title', '') for a in articles[:2]]
+            return '本日の主要記事: ' + '、'.join(titles)
 
     def _create_monthly_summary(self, target_date: datetime, daily_dir: Path) -> str:
         """月次サマリを作成"""
