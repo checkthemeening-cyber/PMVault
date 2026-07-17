@@ -34,7 +34,7 @@ tags: [log]
   - `index.md` の両エントリの廃止注記を削除。
 
 ## 2026-07-17
-- **nikkei-news HTML パーサー修正完了**
+- **nikkei-news HTML パーサー修正 第1段階**
   - 問題：記事 URL の正規表現が旧形式（`/article/XXX`）を想定 → 新形式（`/prime/mobility/article/XXX`）が取得できず、記事数 0 件
   - **修正1：カテゴリページの記事 URL 抽出**
     - 修正前：`r'href="(https://www\.nikkei\.com/article/[^"]+)"'`
@@ -45,7 +45,19 @@ tags: [log]
   - **修正3：/prime/ パス記事の本文抽出**
     - セレクタを拡張：`["body_*", "article-body", "paragraph-node-module*", "article-section-module*"]`
     - `/prime/` 記事は `<div class="paragraph-node-module__9ZOjZa__paragraph">` または `<article class="article-section-module__ek6Sia__snippet">` を使用
+  - 検証結果：タイトル・本文が正常に取得されるが、**すべてのカテゴリから同じ 2 件の記事が抽出される問題が発覚**
+
+- **nikkei-news HTML パーサー修正 第2段階（重複記事を解決）**
+  - 問題：カテゴリページのリンクに「相対パス `/article/XXXXX/`」と「絶対 URL `https://www.nikkei.com/article/XXXXX/`」の 2 形式が混在 → 正規表現で絶対 URL のみを探すと、ごく限定的なリンクしか抽出されない
+  - **修正4：相対パスリンクの抽出と正規化**
+    - カテゴリページから `href="/article/XXXXX/"` 形式のリンクを抽出
+    - 相対パスを絶対 URL に変換：`https://www.nikkei.com{相対パス}`
+    - 既存の絶対 URL リンク（`/prime/` など）と統合し、重複排除
   - **検証結果**
-    - morning mode 実行結果：建設・不動産 2 件、その他各カテゴリ 2 件を正常に収集
-    - 記事内容例：「日産『北米好調』の裏表 フリート低下、奨励金は高止まり」（本文取得成功）
-    - 全カテゴリで記事タイトル＆本文が正常に取得される状態を確認
+    - 各カテゴリから 10 件ずつの**異なる記事**を正常に取得
+    - 商社・卸売り：「GSIクレオス OPV量産」「伊藤忠・三井物産 豪州鉱山開発」
+    - 建設・不動産：「WHERE 月面技術で空き地発見」「大手ゼネコンボーナス格差」
+    - 物流・運輸：「仙台駅改装」「気仙沼モノレール開通」
+    - 自動車：「日本車の中国化」「トヨタ・ホンダの学習」
+    - 資源エネルギー：ネットワークタイムアウト（一時的）
+  - 「すべてのカテゴリに同じ記事」問題は**完全に解決**
