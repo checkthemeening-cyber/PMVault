@@ -1,0 +1,8 @@
+# Netscape HTTP Cookie File
+# This is a generated file! Do not edit.
+
+.nikkei.com	TRUE	/	FALSE	1784249207	NID-AUTHENTICATED-TIMES	TS:1784249207
+.nikkei.com	TRUE	/	FALSE	1784249207	NID-AUTHENTICATED	"TS:2026-07-17 09:46:47"
+.nikkei.com	TRUE	/	FALSE	1784214373	NID-Serial-Cookie	8336089989
+www.nikkei.com	TRUE	/	TRUE	1784249207	RNikkeiAuth	eyJhbGciOUFUzl1NI...5sbFNwiS5-oH5_5A
+www.nikkei.com	TRUE	/	FALSE	1784249207	RNikkeiUserInfo	eyJhdWQiQiQiJybml...ZXNzX3Rva2Vuln0

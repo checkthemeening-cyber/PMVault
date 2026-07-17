@@ -1,0 +1,24 @@
+﻿[2026-07-05 23:30:21] nikkei-news monthly start
+claude.exe : Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdi
+n explicitly: < /dev/null to skip, or wait longer.
+At C:\Users\check\PMVault\.claude\scripts\nikkei-monthly.ps1:5 char:1
++ & "C:\Users\check\.local\bin\claude.exe" --dangerously-skip-permissio ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Warning: no std...or wait longer.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+月次サマリの作成が完了しました。
+
+**保存先**: `nikkei-news/monthly/2026/06_summary.md`
+
+**内容の概要:**
+- **対象期間**: 2026年6月（収集日: 21日・22日・23日・26日・29日の計25ファイル）
+- **全カテゴリ横断まとめ**: 中東情勢の緊張→緩和、金利上昇の実体波及、物流2026年問題の本格化、EV戦略の歴史的転換、商社の非資源シフトという5大テーマ
+
+**各カテゴリのTop5ニュース:**
+- **資源エネルギー**: 東電×大和ハウス1GW蓄電所計画、電気代91円値上げ、原油続落 など
+- **建設・不動産**: 首都圏マンション平均1.2億超・都心中古に一服感、YKKAP値上げ など
+- **物流・運輸**: 物効法完全施行・3,200社義務化、ロート製薬450km自動運転実証 など
+- **商社・卸売り**: 伊藤忠2期連続最高益、コメ余り特売85% など
+- **自動車**: ZEV規制撤回によるEV計画一斉見直し、ホンダ上場来初赤字、BYD軽EV投入 など
+[2026-07-05 23:33:49] nikkei-news monthly done. exit=0

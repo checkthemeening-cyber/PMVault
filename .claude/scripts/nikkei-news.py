@@ -87,11 +87,11 @@ class HTMLArticleParser(HTMLParser):
         # 記事タイトル（複数のセレクタをカスケード）
         if tag == "h1" and not self.title_found:
             class_attr = attrs_dict.get("class", "")
-            # 新規セレクタ: title_t3guga0、旧セレクタ: cmn-article-title
-            if self._class_matches(class_attr, ["title_t3guga0", "cmn-article-title"]):
+            # 新規セレクタ: title_t3guga0（通常記事）、/prime/ 記事、旧セレクタ
+            if self._class_matches(class_attr, ["title_t3guga0", "index-module*", "cmn-article-title"]):
                 self.in_title = True
                 self.title_found = True
-            # フォールバック: 最初の h1 タグ
+            # フォールバック: 最初の h1 タグ（他の形式の記事）
             elif not self.title_found and not class_attr:
                 self.in_title = True
                 self.title_found = True
@@ -105,10 +105,18 @@ class HTMLArticleParser(HTMLParser):
                 self.subtitle_found = True
 
         # 記事本文（複数のセレクタをカスケード）
+        # 通常記事: body_* / article-body
+        # /prime/ 記事: paragraph-node-module* / article-section-module*
         if tag == "div" and not self.body_found:
             class_attr = attrs_dict.get("class", "")
-            # 新規セレクタ: body_* で始まるクラス、旧セレクタ: article-body
-            if self._class_matches(class_attr, ["body_*", "article-body"]):
+            if self._class_matches(class_attr, ["body_*", "article-body", "paragraph-node-module*", "article-section-module*"]):
+                self.in_body = True
+                self.body_found = True
+
+        # /prime/ パスの article タグも本文として処理
+        if tag == "article" and not self.body_found:
+            class_attr = attrs_dict.get("class", "")
+            if self._class_matches(class_attr, ["article-section-module*"]):
                 self.in_body = True
                 self.body_found = True
 
@@ -281,8 +289,10 @@ class NikkeiNewsCollector:
             return articles
 
         # 記事リンクを抽出（正規表現）
+        # 注: URL は https://www.nikkei.com/{path}/article/XXX の形式
+        # /prime/, /business/ などの中間パスを含む可能性がある
         article_urls = re.findall(
-            r'href="(https://www\.nikkei\.com/article/[^"]+)"',
+            r'href="(https://www\.nikkei\.com/[^"]*?/article/[^"]+)"',
             html
         )
 
