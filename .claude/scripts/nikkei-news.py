@@ -667,27 +667,39 @@ class NikkeiNewsCollector:
         print(f"  保存完了: {file_path}")
 
     def _generate_summary(self, category_name: str, articles: List[Dict]) -> str:
-        """記事からサマリを生成（実際の記事内容から抽出）"""
+        """すべての記事を分析してサマリを生成"""
         if not articles:
             return "本日の新着記事はありません"
 
-        # 最初の 1-2 記事の本文から要約文を抽出
-        summary_texts = []
-        for article in articles[:2]:
+        # すべての記事のタイトルと本文を収集
+        titles = [a.get('title', '') for a in articles if a.get('title')]
+        bodies = []
+        for article in articles:
             body = article.get('body', '').strip()
             if body:
-                # 本文の最初の 1 文を抽出（。で区切られる）
-                first_sentence = body.split('。')[0] + '。'
-                if len(first_sentence) > 15:  # 最低限の長さチェック
-                    summary_texts.append(first_sentence)
+                # 本文の最初の 1-2 文を抽出
+                sentences = body.split('。')[:2]
+                first_part = '。'.join([s for s in sentences if s.strip()]) + '。'
+                if len(first_part) > 15:
+                    bodies.append(first_part)
 
-        if summary_texts:
-            # 複数の記事の第 1 文を結合
-            return ''.join(summary_texts)
+        # サマリを構築：タイトル一覧 + 複数記事から抽出した要約
+        summary_parts = []
+
+        # 主要テーマを複数の記事から抽出
+        if len(bodies) >= 3:
+            # 複数の記事から抽出した内容を組み合わせ
+            selected_bodies = bodies[::max(1, len(bodies)//3)]  # 均等に分散して選択
+            summary_parts.extend(selected_bodies[:3])  # 最大 3 つの要約文
+        elif bodies:
+            # 記事が少ない場合はすべて採用
+            summary_parts.extend(bodies[:3])
+
+        if summary_parts:
+            return ''.join(summary_parts)
         else:
-            # フォールバック: 記事タイトルのみ
-            titles = [a.get('title', '') for a in articles[:2]]
-            return '本日の主要記事: ' + '、'.join(titles)
+            # フォールバック: 記事タイトルのすべてをリスト化
+            return f"本日の主要記事({len(titles)}件): " + '、'.join(titles[:5])
 
     def _create_monthly_summary(self, target_date: datetime, daily_dir: Path) -> str:
         """月次サマリを作成"""
