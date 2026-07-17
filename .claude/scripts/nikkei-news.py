@@ -27,6 +27,7 @@ import urllib.request
 import urllib.parse
 from http.cookiejar import Cookie, CookieJar
 from html.parser import HTMLParser
+from bs4 import BeautifulSoup
 
 # ニュース監視カテゴリ設定
 CATEGORIES = {
@@ -145,6 +146,26 @@ class HTMLArticleParser(HTMLParser):
             elif self.in_body:
                 self.body_parts.append(text)
 
+    def _extract_body_from_soup(self, html: str) -> str:
+        """BeautifulSoup を使用して、p タグから本文を抽出"""
+        try:
+            soup = BeautifulSoup(html, 'html.parser')
+
+            # 20文字以上のテキストを含む p タグを抽出
+            p_tags = soup.find_all('p')
+            body_texts = []
+
+            for p in p_tags:
+                text = p.get_text().strip()
+                # 20文字以上で、著作権表記やナビゲーション文字列でない p タグ
+                if len(text) > 20 and not any(x in text for x in ['著作権', 'Copyright', 'プライバシー']):
+                    body_texts.append(text)
+
+            return "\n".join(body_texts)
+        except Exception as e:
+            print(f"BeautifulSoup パースエラー: {e}")
+            return ""
+
 
 class CookieManager:
     """Netscape Cookie ファイル形式の Cookie を管理"""
@@ -228,19 +249,41 @@ def extract_article_body(html: str) -> Dict[str, str]:
         parser = HTMLArticleParser()
         parser.feed(html)
 
-        body_text = "\n".join(parser.body_parts).strip()
+        title = parser.title.strip()
+        subtitle = parser.subtitle.strip()
+        is_member_only = parser.is_member_only
 
-        # 会員限定記事の場合、本文の先頭に注記を追加
-        if parser.is_member_only and not body_text:
+        # BeautifulSoup で本文を抽出（複数の p タグを結合）
+        soup = BeautifulSoup(html, 'html.parser')
+        p_tags = soup.find_all('p')
+
+        body_texts = []
+        for p in p_tags:
+            text = p.get_text().strip()
+            # 20文字以上で、ナビゲーションやメタ情報でない p タグを採用
+            # フィルター対象: 著作権、登録、購読、広告、メール配信など
+            filter_keywords = [
+                '著作権', 'Copyright', 'プライバシー', 'NIKKEI',
+                '有料登録', '無料登録', 'すべての記事が読み放題',
+                'メールアドレス', 'メール配信', 'フォロー',
+                '記事消費', 'ニュースレター', '会議資料', 'メッセージ',
+                'この記事は会員限定', '会員限定です', '登録すると続きを',
+                'No reproduction', '※掲載される投稿'
+            ]
+            if len(text) > 20 and not any(x in text for x in filter_keywords):
+                body_texts.append(text)
+
+        body_text = "\n".join(body_texts) if body_texts else ""
+
+        # 本文が取得できない場合のみ、注記を表示
+        if not body_text and is_member_only:
             body_text = "【会員限定記事】本文は有料記事のため取得できません。タイトルとリード文のみ表示しています。"
-        elif parser.is_member_only:
-            body_text = "【会員限定記事】\n\n" + body_text
 
         return {
-            "title": parser.title.strip(),
-            "subtitle": parser.subtitle.strip(),
+            "title": title,
+            "subtitle": subtitle,
             "body": body_text,
-            "is_member_only": parser.is_member_only
+            "is_member_only": is_member_only
         }
     except Exception as e:
         print(f"HTML パースエラー: {e}")
@@ -295,12 +338,12 @@ class NikkeiNewsCollector:
         # 3. サブカテゴリ: https://www.nikkei.com/prime/*/article/XXXXX/
 
         # 相対パスの記事リンクを抽出
-        article_urls = re.findall(
+        article_urls_relative = re.findall(
             r'href="(/article/[^"]+)"',
             html
         )
         # 相対パスを絶対 URL に変換
-        article_urls = [f"https://www.nikkei.com{url}" for url in article_urls]
+        article_urls = [f"https://www.nikkei.com{url}" for url in article_urls_relative]
 
         # 絶対 URL の記事リンクも抽出（重複排除）
         absolute_urls = re.findall(
@@ -310,6 +353,9 @@ class NikkeiNewsCollector:
         for url in absolute_urls:
             if url not in article_urls:
                 article_urls.append(url)
+
+        # 重複を排除（セットを使用して重複URLを削除）
+        article_urls = list(dict.fromkeys(article_urls))  # 順序を保持しながら重複排除
 
         print(f"  検出された記事数: {len(article_urls)}")
 

@@ -4,8 +4,8 @@
   "title": "Respond to Japanese greeting",
   "titleGenerationStatus": "success",
   "createdAt": 1782025364302,
-  "updatedAt": 1784252185233,
-  "lastResponseAt": 1784252185233,
+  "updatedAt": 1784252593652,
+  "lastResponseAt": 1784252593652,
   "sessionId": "00d01d31-d308-4944-88c6-d5c1d17d5667",
   "selectedModel": "haiku",
   "providerState": {
@@ -877,11 +877,11 @@
   "usage": {
     "model": "haiku",
     "inputTokens": 8,
-    "cacheCreationInputTokens": 1046,
-    "cacheReadInputTokens": 75911,
+    "cacheCreationInputTokens": 750,
+    "cacheReadInputTokens": 91790,
     "contextWindow": 200000,
     "contextWindowIsAuthoritative": true,
-    "contextTokens": 76965,
-    "percentage": 38
+    "contextTokens": 92548,
+    "percentage": 46
   }
 }
