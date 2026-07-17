@@ -667,39 +667,56 @@ class NikkeiNewsCollector:
         print(f"  保存完了: {file_path}")
 
     def _generate_summary(self, category_name: str, articles: List[Dict]) -> str:
-        """すべての記事を分析してサマリを生成"""
+        """すべての記事を分析してサマリを生成（重要要素の抽出）"""
         if not articles:
             return "本日の新着記事はありません"
 
+        import re
+
         # すべての記事のタイトルと本文を収集
         titles = [a.get('title', '') for a in articles if a.get('title')]
-        bodies = []
+        summaries = []
+
         for article in articles:
+            title = article.get('title', '').strip()
             body = article.get('body', '').strip()
+
             if body:
-                # 本文の最初の 1-2 文を抽出
+                # 記事の最初の 1-2 文を抽出
                 sentences = body.split('。')[:2]
-                first_part = '。'.join([s for s in sentences if s.strip()]) + '。'
-                if len(first_part) > 15:
-                    bodies.append(first_part)
+                text = '。'.join([s.strip() for s in sentences if s.strip()])
 
-        # サマリを構築：タイトル一覧 + 複数記事から抽出した要約
-        summary_parts = []
+                # 発言者情報（【...=...】）を削除
+                text = re.sub(r'【[^】]+】', '', text)
 
-        # 主要テーマを複数の記事から抽出
-        if len(bodies) >= 3:
-            # 複数の記事から抽出した内容を組み合わせ
-            selected_bodies = bodies[::max(1, len(bodies)//3)]  # 均等に分散して選択
-            summary_parts.extend(selected_bodies[:3])  # 最大 3 つの要約文
-        elif bodies:
-            # 記事が少ない場合はすべて採用
-            summary_parts.extend(bodies[:3])
+                # 不要な空白を整理
+                text = re.sub(r'\s+', ' ', text).strip()
 
-        if summary_parts:
-            return ''.join(summary_parts)
+                if len(text) > 20:  # 最低限の長さ
+                    summaries.append(text)
+
+        # サマリを構築：複数の記事から均等に選択
+        if len(summaries) >= 3:
+            # 3 つの記事から抽出（均等分散）
+            step = max(1, len(summaries) // 3)
+            selected = [summaries[i*step] for i in range(3) if i*step < len(summaries)]
+        elif summaries:
+            selected = summaries[:3]
         else:
-            # フォールバック: 記事タイトルのすべてをリスト化
-            return f"本日の主要記事({len(titles)}件): " + '、'.join(titles[:5])
+            selected = []
+
+        if selected:
+            # サマリを簡潔にまとめる
+            summary_text = '一方、'.join(selected)
+            # 最後の「一方、」を削除して「。」に置き換え
+            summary_text = summary_text.replace('一方、', '。').rstrip('。') + '。'
+            return summary_text
+        else:
+            # フォールバック: 記事タイトルのみ
+            if titles:
+                return f"本日のニュース({len(titles)}件): " + '、'.join(titles[:3]) + '他'
+            else:
+                return "本日の新着記事はありません"
 
     def _create_monthly_summary(self, target_date: datetime, daily_dir: Path) -> str:
         """月次サマリを作成"""
