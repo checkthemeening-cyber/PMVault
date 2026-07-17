@@ -289,12 +289,27 @@ class NikkeiNewsCollector:
             return articles
 
         # 記事リンクを抽出（正規表現）
-        # 注: URL は https://www.nikkei.com/{path}/article/XXX の形式
-        # /prime/, /business/ などの中間パスを含む可能性がある
+        # 注: URL は以下の形式で複数のバリエーション
+        # 1. 相対パス: /article/XXXXX/
+        # 2. 絶対 URL: https://www.nikkei.com/article/XXXXX/
+        # 3. サブカテゴリ: https://www.nikkei.com/prime/*/article/XXXXX/
+
+        # 相対パスの記事リンクを抽出
         article_urls = re.findall(
+            r'href="(/article/[^"]+)"',
+            html
+        )
+        # 相対パスを絶対 URL に変換
+        article_urls = [f"https://www.nikkei.com{url}" for url in article_urls]
+
+        # 絶対 URL の記事リンクも抽出（重複排除）
+        absolute_urls = re.findall(
             r'href="(https://www\.nikkei\.com/[^"]*?/article/[^"]+)"',
             html
         )
+        for url in absolute_urls:
+            if url not in article_urls:
+                article_urls.append(url)
 
         print(f"  検出された記事数: {len(article_urls)}")
 
