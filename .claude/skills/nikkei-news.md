@@ -1,6 +1,6 @@
 # 日経ニュース収集・サマリスキル
 
-このスキルは日経新聞サイト（nikkei.com）から5カテゴリのニュースを収集・サマリし、
+このスキルは日経新聞サイト（nikkei.com）から6カテゴリのニュースを収集・サマリし、
 Markdownファイルとして記録する。
 
 **保存パス:**
@@ -16,6 +16,7 @@ Markdownファイルとして記録する。
 | 物流・運輸 | https://www.nikkei.com/business/logistics/ |
 | 商社・卸売り | https://www.nikkei.com/business/wholesale/ |
 | 自動車 | https://www.nikkei.com/business/vehicles-machinery/ |
+| 素材 | https://www.nikkei.com/business/material/ |
 
 ## 実行モード
 
@@ -39,6 +40,7 @@ nikkei-news/
           物流・運輸.md
           商社・卸売り.md
           自動車.md
+          素材.md
   monthly/
     YYYY/
       MM_summary.md    （例: 06_summary.md）
@@ -70,7 +72,7 @@ date '+%Y %m %d %H:%M'
 
 ### Step 3: 各カテゴリの当日分ニュースを収集する
 
-5カテゴリそれぞれについて以下を実行する:
+6カテゴリそれぞれについて以下を実行する:
 
 1. **WebFetch** でカテゴリページを取得する
    - 例: `https://www.nikkei.com/business/energy/`
