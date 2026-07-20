@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 日経ニュース収集・サマリスキル（改善版）
-5つのカテゴリから毎日のニュースを収集し、Markdownファイルとして記録する。
+6つのカテゴリから毎日のニュースを収集し、Markdownファイルとして記録する。
 Cookie ベース認証で有料記事の本文取得に対応。
 
 実行方法:
@@ -36,6 +36,7 @@ CATEGORIES = {
     "物流・運輸": "https://www.nikkei.com/business/logistics/",
     "商社・卸売り": "https://www.nikkei.com/business/wholesale/",
     "自動車": "https://www.nikkei.com/business/vehicles-machinery/",
+    "素材": "https://www.nikkei.com/business/material/",
 }
 
 BASE_DIR = Path(__file__).parent.parent.parent / "nikkei-news"
