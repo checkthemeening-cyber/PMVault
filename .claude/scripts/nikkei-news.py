@@ -243,6 +243,18 @@ class WebFetcher:
             return None
 
 
+CHALLENGE_PAGE_MARKERS = [
+    "通常と異なるアクセスが確認されました",
+    "下記のチェックボックスにチェックを付けて",
+    "アクセスが集中しています",
+]
+
+
+def is_bot_challenge_page(html: str) -> bool:
+    """ボット検知・認証チャレンジページ（記事ではない）かどうかを判定"""
+    return any(marker in html for marker in CHALLENGE_PAGE_MARKERS)
+
+
 def extract_article_body(html: str) -> Dict[str, str]:
     """HTML から記事本文を抽出（会員限定記事対応）"""
     try:
@@ -378,6 +390,15 @@ class NikkeiNewsCollector:
         for article_url in article_urls[:10]:  # 最新10件のみ処理
             time.sleep(0.5)  # サーバーへの負荷軽減
             article_html = self.fetcher.fetch(article_url)
+
+            if article_html and is_bot_challenge_page(article_html):
+                # ボット検知のチャレンジページ。少し待って1回だけ再試行する
+                print(f"  警告: ボット検知ページを検出、再試行します: {article_url}")
+                time.sleep(2.0)
+                article_html = self.fetcher.fetch(article_url)
+                if article_html and is_bot_challenge_page(article_html):
+                    print(f"  警告: 再試行でもボット検知ページのため、この記事をスキップします: {article_url}")
+                    continue
 
             if article_html:
                 article_data = extract_article_body(article_html)
