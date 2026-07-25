@@ -1,3 +1,8 @@
+---
+name: nikkei-news
+description: 日経新聞（nikkei.com）の6カテゴリ（資源エネルギー・建設不動産・物流運輸・商社卸売り・自動車・素材）からニュースを収集し、出典付きサマリを nikkei-news/ 配下に記録する。morning/evening/monthly/yearly の4モード。「nikkei-news」「日経ニュースを集めて」「日経の月次サマリ」で発火。
+---
+
 # 日経ニュース収集・サマリスキル
 
 このスキルは日経新聞サイト（nikkei.com）から6カテゴリのニュースを収集・サマリし、
