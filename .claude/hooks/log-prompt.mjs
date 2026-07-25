@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 // あらゆるClaudeへの命令を、Vault の 40_運用/log.md に追記するHook。
 // Claudeのユーザー設定（~/.claude/settings.json）の UserPromptSubmit から呼び出す。
-import { readFileSync, appendFileSync, existsSync } from 'node:fs';
+// Vaultのパスは第1引数で渡す（cmd/bash/PowerShellのどれで実行されても効く）。環境変数 OBSIDIAN_VAULT でも可。
+import { readFileSync, appendFileSync, existsSync, mkdirSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { join, basename } from 'node:path';
+import { join, basename, dirname } from 'node:path';
 
-const VAULT = process.env.OBSIDIAN_VAULT || join(homedir(), 'Documents', 'PMVault');
+const VAULT = process.argv[2] || process.env.OBSIDIAN_VAULT || join(homedir(), 'Documents', 'PMVault');
 
 let input = '';
 try { input = readFileSync(0, 'utf8'); } catch { process.exit(0); }
@@ -30,6 +31,7 @@ const day = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate()
 const time = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
 const file = join(VAULT, '40_運用', 'log.md');
+try { mkdirSync(dirname(file), { recursive: true }); } catch { process.exit(0); }
 if (!existsSync(file)) {
   const header = `---\ntype: ログ\nstatus: 参照用\ntopic: log\ntags: [log]\n---\n\n# log ― 操作ログ\n`;
   try { appendFileSync(file, header); } catch { process.exit(0); }

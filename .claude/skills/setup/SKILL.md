@@ -20,9 +20,10 @@ description: このVaultを受講者の環境に合わせて初期設定する�
 3. 命令ログHookを登録する（ここが環境依存の本体）
    - ユーザー設定 `~/.claude/settings.json` を読む（無ければ新規作成）。
    - `hooks.UserPromptSubmit` に、このVaultの `log-prompt.mjs` を VAULT のパスで呼ぶ command を1つ足す。既存の hooks は消さず追記だけ。同じ command が既にあれば重複させない。
-   - command は OS に合わせる：
-     - Mac / Linux : `OBSIDIAN_VAULT="<VAULT>" node "<VAULT>/.claude/hooks/log-prompt.mjs"`
-     - Windows : `set OBSIDIAN_VAULT=<VAULT> && node "<VAULT>\.claude\hooks\log-prompt.mjs"`
+   - command は OS を問わず同じ形にする。Vaultのパスは環境変数ではなく第1引数で渡す：
+     `node "<VAULT>/.claude/hooks/log-prompt.mjs" "<VAULT>"`
+   - Windowsでもパス区切りは `/` を使う（`\` は経由するシェルによってエスケープとして食われる）。
+   - `set VAR=... && ...`（cmd構文）や `VAR=... cmd`（sh構文）でHookに環境変数を渡さないこと。Hookを実行するシェルはOSと一致するとは限らず、Windowsでは Git Bash 経由になるため cmd構文の `set` が黙って無視され、ログが出ないまま失敗する。
    - 変更前に settings.json の差分を見せて、承認を得てから書き込む。
    - 「ログを取らない」を選んだら、この手順は飛ばす。
 
