@@ -1,11 +1,11 @@
 # 日経ニュース収集・サマリスキル
 
-このスキルは日経新聞サイト（nikkei.com）から5カテゴリのニュースを収集・サマリし、
+このスキルは日経新聞サイト（nikkei.com）から6カテゴリのニュースを収集・サマリし、
 Markdownファイルとして記録する。
 
 **保存パス:**
-- ローカル実行時: `C:\Users\check\PMVault\nikkei-news\`
-- クラウド実行時: リポジトリルートからの相対パス `nikkei-news/`
+- ローカル実行時: `C:\Users\check\PMVault\00_ナレッジ\nikkei-news\`
+- クラウド実行時: リポジトリルートからの相対パス `00_ナレッジ/nikkei-news/`
 
 ## 監視カテゴリとURL
 
@@ -16,6 +16,7 @@ Markdownファイルとして記録する。
 | 物流・運輸 | https://www.nikkei.com/business/logistics/ |
 | 商社・卸売り | https://www.nikkei.com/business/wholesale/ |
 | 自動車 | https://www.nikkei.com/business/vehicles-machinery/ |
+| 素材 | https://www.nikkei.com/business/material/ |
 
 ## 実行モード
 
@@ -29,7 +30,7 @@ Markdownファイルとして記録する。
 ## 保存先ディレクトリ構造
 
 ```
-nikkei-news/
+00_ナレッジ/nikkei-news/
   daily/
     YYYY/
       MM/
@@ -39,6 +40,7 @@ nikkei-news/
           物流・運輸.md
           商社・卸売り.md
           自動車.md
+          素材.md
   monthly/
     YYYY/
       MM_summary.md    （例: 06_summary.md）
@@ -60,7 +62,7 @@ date '+%Y %m %d %H:%M'
 
 ### Step 2: 前回収集日を確認し、収集ギャップの有無を判定する
 
-1. `nikkei-news/daily/` 配下を **Glob**（例: `nikkei-news/daily/*/*/*/*.md`）で走査し、既存の日付ディレクトリ（`YYYY/MM/DD`）のうち **直近（最新）の日付** を特定する。
+1. `00_ナレッジ/nikkei-news/daily/` 配下を **Glob**（例: `00_ナレッジ/nikkei-news/daily/*/*/*/*.md`）で走査し、既存の日付ディレクトリ（`YYYY/MM/DD`）のうち **直近（最新）の日付** を特定する。
    - 日付ディレクトリが1件も存在しない場合は初回実行として扱い、バックフィルは行わずStep 3へ進む（当日分のみ収集）。
 2. 特定した最新日付を `last_date` とする。
 3. `last_date` の翌日から `today` の前日までを **未収集期間** とする。
@@ -70,7 +72,7 @@ date '+%Y %m %d %H:%M'
 
 ### Step 3: 各カテゴリの当日分ニュースを収集する
 
-5カテゴリそれぞれについて以下を実行する:
+6カテゴリそれぞれについて以下を実行する:
 
 1. **WebFetch** でカテゴリページを取得する
    - 例: `https://www.nikkei.com/business/energy/`
@@ -91,7 +93,7 @@ date '+%Y %m %d %H:%M'
 ### Step 4: 当日分をカテゴリごとにファイルとして作成・保存する
 
 以下の **新フォーマット** でファイルを作成する。ファイルパス:
-`nikkei-news/daily/YYYY/MM/DD/{カテゴリ名}.md`
+`00_ナレッジ/nikkei-news/daily/YYYY/MM/DD/{カテゴリ名}.md`
 
 ```markdown
 # {カテゴリ名} ニュースサマリ
@@ -153,7 +155,7 @@ Step 2で未収集期間が検出された場合のみ実行する。未収集�
    - それでも記事が見つからない日は、無理に埋めようとせず「取得できず」として記録する（下記3を参照）
 
 2. **ファイルの作成**
-   - 既に該当日・該当カテゴリのファイル（`nikkei-news/daily/YYYY/MM/DD/{カテゴリ名}.md`）が存在する場合は **上書きせず、スキップする**（重複収集・データ破壊を防ぐ）
+   - 既に該当日・該当カテゴリのファイル（`00_ナレッジ/nikkei-news/daily/YYYY/MM/DD/{カテゴリ名}.md`）が存在する場合は **上書きせず、スキップする**（重複収集・データ破壊を防ぐ）
    - 存在しない場合、当日分と同じフォーマットで新規作成する。ただし以下の点を当日分と区別するために追記する：
      - `**収集記事数**` の行の直後に、バックフィル注記を1行追加する:
        ```markdown
@@ -178,7 +180,7 @@ morning モードと同様に今日の日付（YYYY, MM, DD）を確認する。
 ### Step 2: 朝のファイルを読み込み、既収集URLを把握する
 
 各カテゴリについて、当日の朝のファイルを読み込む:
-`nikkei-news/daily/YYYY/MM/DD/{カテゴリ名}.md`
+`00_ナレッジ/nikkei-news/daily/YYYY/MM/DD/{カテゴリ名}.md`
 
 - ファイルが存在する場合: 記載されている全 URL を抽出してリストに保持する
 - ファイルが存在しない場合: 朝の収集が行われていないため、morning モードと同様に全件収集する
@@ -232,7 +234,7 @@ morning モードと同様に今日の日付（YYYY, MM, DD）を確認する。
 ### Step 2: 日次ファイルを読み込む
 
 前月のディレクトリ内のファイルを全て読み込む:
-`nikkei-news/daily/YYYY/MM/**/*.md`
+`00_ナレッジ/nikkei-news/daily/YYYY/MM/**/*.md`
 
 - **Glob** または Bash `find` コマンドで対象ファイル一覧を取得する
 - 各ファイルを **Read** ツールで読み込む
@@ -240,7 +242,7 @@ morning モードと同様に今日の日付（YYYY, MM, DD）を確認する。
 ### Step 3: 月次サマリを作成する
 
 以下の形式で保存する。ファイルパス:
-`nikkei-news/monthly/YYYY/MM_summary.md`
+`00_ナレッジ/nikkei-news/monthly/YYYY/MM_summary.md`
 
 ```markdown
 # {YYYY年MM月} ニュース月次サマリ
@@ -282,12 +284,12 @@ morning モードと同様に今日の日付（YYYY, MM, DD）を確認する。
 ### Step 2: 月次ファイルを読み込む
 
 前年の月次サマリを全て読み込む:
-`nikkei-news/monthly/YYYY/*_summary.md`
+`00_ナレッジ/nikkei-news/monthly/YYYY/*_summary.md`
 
 ### Step 3: 年次サマリを作成する
 
 以下の形式で保存する。ファイルパス:
-`nikkei-news/yearly/YYYY_summary.md`
+`00_ナレッジ/nikkei-news/yearly/YYYY_summary.md`
 
 ```markdown
 # {YYYY年} ニュース年次サマリ
@@ -363,7 +365,7 @@ python nikkei-news.py yearly
 
 **morning モード:**
 1. 当日のニュースを5カテゴリから収集
-2. `nikkei-news/daily/YYYY/MM/DD/{カテゴリ}.md` に保存
+2. `00_ナレッジ/nikkei-news/daily/YYYY/MM/DD/{カテゴリ}.md` に保存
 3. スクリプトが書き込む「## 本日のまとめ」はあくまで下書き。実行後は必ず Step 4.5 に従い、Claude が各ファイルの記事本文を読んで「本日のまとめ」を書き直す
 
 **evening モード:**
@@ -373,11 +375,11 @@ python nikkei-news.py yearly
 
 **monthly モード:**
 1. 前月（現在の月の1か月前）の日次ファイルを集約
-2. `nikkei-news/monthly/YYYY/MM_summary.md` に保存
+2. `00_ナレッジ/nikkei-news/monthly/YYYY/MM_summary.md` に保存
 
 **yearly モード:**
 1. 前年の月次ファイルを集約
-2. `nikkei-news/yearly/YYYY_summary.md` に保存
+2. `00_ナレッジ/nikkei-news/yearly/YYYY_summary.md` に保存
 
 ---
 

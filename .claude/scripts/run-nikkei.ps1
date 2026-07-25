@@ -1,4 +1,4 @@
-# 日経ニュース自動収集スクリプト
+﻿# 日経ニュース自動収集スクリプト
 # 使用方法: pwsh -File run-nikkei.ps1 -Mode [morning|evening|monthly]
 param(
     [string]$Mode = "morning"
@@ -41,7 +41,7 @@ $commitMsg = switch ($Mode) {
 }
 
 # git add -> commit -> push
-git -C $RepoDir add nikkei-news/ 2>&1 | ForEach-Object { Log $_ }
+git -C $RepoDir add "00_ナレッジ/nikkei-news/" 2>&1 | ForEach-Object { Log $_ }
 $changes = git -C $RepoDir status --porcelain 2>&1
 if ($changes) {
     git -C $RepoDir commit -m $commitMsg 2>&1 | ForEach-Object { Log $_ }

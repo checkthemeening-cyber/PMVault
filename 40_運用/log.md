@@ -125,3 +125,13 @@ tags: [log]
     - 自動車：「ホンダが中国進出。豊田通商が米国サービス。日野自動車が地域連携」
     - すべてのサマリから記者名・特派員情報が除外された
     - サマリが「引用」から「重要要素の抽出」に改善
+
+## 2026-07-25 nikkei-news フォルダを 00_ナレッジ 配下へ移動
+- Vaultルートの `nikkei-news/` を `00_ナレッジ/nikkei-news/` へ移動（git追跡 111ファイル、内容は無変更のrename）
+  - WIKI.md のフォルダ構成に無いルート直下の例外を解消。日次・月次サマリは常設ナレッジの層に相当するため 00_ナレッジ へ
+- 保存パスを固定で持っていた参照を同時に更新（移動だけだと翌朝の自動収集が旧パスを再生成して二重管理になる）
+  - `.claude/skills/nikkei-news.md`（14箇所）／`.claude/skills/nikkei-news-mailer.md`
+  - `.claude/scripts/nikkei-news.py`（BASE_DIR）／`nikkei-news-mailer.ps1`（$dailyDir）／`run-nikkei.ps1`（git add）
+  - `.claude/scripts/USAGE_GUIDE.md`（使用手順のため更新。他3つの改善報告書は履歴として据え置き）
+- `run-nikkei.ps1` に UTF-8 BOM を付与。powershell.exe 5.1 で起動された場合に日本語パスが化けて `git add` が無言で空振りするのを防ぐため
+- `index.md` に「日経ニュース（00_ナレッジ/nikkei-news/）」の節を追加
