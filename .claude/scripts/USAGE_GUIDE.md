@@ -89,7 +89,7 @@ python nikkei-news.py morning
 ```
 [morning] 2026年07月17日 09:50 の収集を開始します
   → 資源エネルギー を収集中...
-    保存完了: C:\Users\check\PMVault\nikkei-news\daily\2026\07\17\資源エネルギー.md
+    保存完了: C:\Users\check\PMVault\00_ナレッジ\nikkei-news\daily\2026\07\17\資源エネルギー.md
   → 建設・不動産 を収集中...
   ...
 [morning] 収集完了
@@ -97,7 +97,7 @@ python nikkei-news.py morning
 
 **出力ファイル:**
 ```
-nikkei-news/daily/2026/07/17/
+00_ナレッジ/nikkei-news/daily/2026/07/17/
 ├── 資源エネルギー.md
 ├── 建設・不動産.md
 ├── 物流・運輸.md
@@ -127,7 +127,7 @@ python nikkei-news.py evening
 ```
 [evening] 2026年07月17日 18:30 の更新を開始します
   → 資源エネルギー の新着を確認中...
-    3件の新着を追記: C:\Users\check\PMVault\nikkei-news\daily\2026\07\17\資源エネルギー.md
+    3件の新着を追記: C:\Users\check\PMVault\00_ナレッジ\nikkei-news\daily\2026\07\17\資源エネルギー.md
   ...
 [evening] 更新完了
 ```
@@ -151,7 +151,7 @@ python nikkei-news.py monthly
 
 **出力ファイル:**
 ```
-nikkei-news/monthly/2026/06_summary.md
+00_ナレッジ/nikkei-news/monthly/2026/06_summary.md
 ```
 
 **推奨実行日**: 毎月 1 日
@@ -173,7 +173,7 @@ python nikkei-news.py yearly
 
 **出力ファイル:**
 ```
-nikkei-news/yearly/2025_summary.md
+00_ナレッジ/nikkei-news/yearly/2025_summary.md
 ```
 
 **推奨実行日**: 1 月 1 日
@@ -279,7 +279,7 @@ OSError: [Errno 2] No such file or directory
 ```
 
 **解決策:**
-- `nikkei-news/daily/YYYY/MM/DD/` ディレクトリが自動作成されない場合
+- `00_ナレッジ/nikkei-news/daily/YYYY/MM/DD/` ディレクトリが自動作成されない場合
 - 手動でディレクトリを作成してから実行
 - または、一度 morning モードを実行してディレクトリを作成
 
@@ -400,7 +400,7 @@ python nikkei-news.py yearly
 |---|---|---|
 | Cookie セットアップ | `NIKKEI_COOKIE_SETUP.md` | Cookie 認証の詳細手順 |
 | 改善内容 | `NIKKEI_IMPROVEMENT_SUMMARY.md` | 実装詳細・技術仕様 |
-| サンプル出力 | `nikkei-news/daily/YYYY/MM/DD/*.md` | 実際の出力例 |
+| サンプル出力 | `00_ナレッジ/nikkei-news/daily/YYYY/MM/DD/*.md` | 実際の出力例 |
 
 ---
 
@@ -416,7 +416,7 @@ python nikkei-news.py yearly
 **A**: 日経新聞の HTML 構造が変更された可能性があります。`HTMLArticleParser` のセレクタを確認してください。
 
 ### Q: 出力ファイルはどこに保存されますか？
-**A**: `C:\Users\check\PMVault\nikkei-news\` ディレクトリ配下の日付別フォルダです。
+**A**: `C:\Users\check\PMVault\00_ナレッジ\nikkei-news\` ディレクトリ配下の日付別フォルダです。
 
 ### Q: 過去の記事も取得できますか？
 **A**: 現在は当日分のみです。過去記事対応は将来の拡張予定です。

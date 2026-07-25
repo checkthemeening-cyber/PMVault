@@ -30,6 +30,13 @@ tags: [index]
 - [[_templates/出所と確からしさ_テンプレ]] … 信頼レイヤーfrontmatterの拡張仕様
 - [[_templates/レビュー記録_テンプレ]] … 週次/月次レビューの記録雛形
 
+## 日経ニュース（00_ナレッジ/nikkei-news/）
+自動収集の常設アーカイブ。毎日9:00に朝分、16:00に夕刊差分を収集し、9:15/16:15にメール送信する。
+- `daily/YYYY/MM/DD/{カテゴリ}.md` … 6カテゴリ（資源エネルギー・建設・不動産・物流・運輸・商社・卸売り・自動車・素材）の日次サマリ
+- `monthly/YYYY/MM_summary.md` … 月次サマリ（前月分を月初に作成）
+- `yearly/YYYY_summary.md` … 年次サマリ（前年分を年初に作成）
+- 収集ルールは `.claude/skills/nikkei-news.md`、メール送信は `.claude/skills/nikkei-news-mailer.md`
+
 ## 人物・組織（20_案件/entities/）
 - [[40_運用/domain]] … 私自身（特別なentity）
 

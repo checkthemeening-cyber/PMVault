@@ -39,7 +39,7 @@ CATEGORIES = {
     "素材": "https://www.nikkei.com/business/material/",
 }
 
-BASE_DIR = Path(__file__).parent.parent.parent / "nikkei-news"
+BASE_DIR = Path(__file__).parent.parent.parent / "00_ナレッジ" / "nikkei-news"
 COOKIE_FILE = Path(__file__).parent / "nikkei-cookies.txt"
 
 
