@@ -33,3 +33,8 @@ tags: [templates]
 | [[レビュー記録_テンプレ]] | 週次/月次レビューの記録雛形 |
 
 命名は `YYYY-MM-DD-種類-主題.md`（日付ノート）＋ frontmatter（type/status/date/topic/tags）で統一。
+
+## Markdown以外の雛形
+| ファイル | 用途 |
+|---|---|
+| `ADLスライド様式/ADL_Slide_User_Guide.pptx` | ADL公式のPPTデザイン規約の原本（User guideline 全71枚・26レイアウト・テーマ"ADL"）。仕様の要約は [[ADLスライド様式]]、生成方法は [[スライド生成キット]] |
