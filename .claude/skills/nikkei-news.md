@@ -331,24 +331,31 @@ morning モードと同様に今日の日付（YYYY, MM, DD）を確認する。
 
 ### 実行方法
 ```bash
-python nikkei-news.py [mode]
+python .claude/scripts/nikkei-news.py [mode]
 ```
+
+**重要（承認プロンプト回避）**: 必ず上記のように **単独のコマンドとして** 実行する。
+`cd C:\Users\check\PMVault && python ...` のように `cd` を前置したり、他のコマンドと
+`&&` や改行で連結したりしないこと。Bashツールの作業ディレクトリは既にVaultルートに
+固定されているため `cd` は不要であり、`.claude/settings.json` の許可ルール
+（`Bash(python .claude/scripts/nikkei-news.py*)` など）はコマンド文字列の **先頭一致**
+なので、`cd` 等で始まる複合コマンドにすると一致せず毎回確認を求められる。
 
 ### 実行例
 
 ```bash
 # morning モード（デフォルト）
-python nikkei-news.py morning
-python nikkei-news.py
+python .claude/scripts/nikkei-news.py morning
+python .claude/scripts/nikkei-news.py
 
 # evening モード
-python nikkei-news.py evening
+python .claude/scripts/nikkei-news.py evening
 
 # monthly モード
-python nikkei-news.py monthly
+python .claude/scripts/nikkei-news.py monthly
 
 # yearly モード
-python nikkei-news.py yearly
+python .claude/scripts/nikkei-news.py yearly
 ```
 
 ### 実装の特徴
