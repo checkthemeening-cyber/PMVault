@@ -14,8 +14,9 @@ cd "$VAULT_DIR" || {
 PROMPT='直下に散らかった新しいノートだけを、organize-vault の構造に沿って安全なフォルダへ移動する。既存のフォルダ構造は触らない。ファイルの削除は絶対にしない。これは自動実行なので、確認は求めず最後まで実行する。'
 
 OUTPUT="$(claude -p "$PROMPT" \
-  --allowedTools "Read,Glob,Grep,Bash(mv *),Bash(mkdir *)" \
-  --disallowedTools "Bash(rm *),Bash(rmdir *),Bash(rd *),Bash(del *),Bash(Remove-Item *)" \
+  --add-dir "$VAULT_DIR" \
+  --allowedTools "Read,Glob,Grep,Bash(mv *),Bash(mkdir *),PowerShell(Move-Item *),PowerShell(New-Item -ItemType Directory *)" \
+  --disallowedTools "Bash(rm *),Bash(rmdir *),Bash(rd *),Bash(del *),Bash(Remove-Item *),Bash(git mv *),PowerShell(Remove-Item *),PowerShell(rm *),PowerShell(del *),PowerShell(rd *)" \
   2>&1)"
 STATUS=$?
 
