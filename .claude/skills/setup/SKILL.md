@@ -19,10 +19,16 @@ description: このVaultを受講者の環境に合わせて初期設定する�
 
 3. 命令ログHookを登録する（ここが環境依存の本体）
    - ユーザー設定 `~/.claude/settings.json` を読む（無ければ新規作成）。
-   - `hooks.UserPromptSubmit` に、このVaultの `log-prompt.mjs` を VAULT のパスで呼ぶ command を1つ足す。既存の hooks は消さず追記だけ。同じ command が既にあれば重複させない。
-   - command は OS に合わせる：
-     - Mac / Linux : `OBSIDIAN_VAULT="<VAULT>" node "<VAULT>/.claude/hooks/log-prompt.mjs"`
-     - Windows : `set OBSIDIAN_VAULT=<VAULT> && node "<VAULT>\.claude\hooks\log-prompt.mjs"`
+   - `hooks.UserPromptSubmit` と `hooks.Stop` の**両方**に、このVaultの `log-prompt.mjs` を VAULT のパスで呼ぶ command を足す（同一のcommandを2箇所）。前者が「日時・依頼」、後者が「結果」を書く。既存の hooks は消さず追記だけ。同じ command が既にあれば重複させない。
+   - command は OS を問わず同じ形にする。Vaultのパスは環境変数ではなく第1引数で渡す：
+     `node "<VAULT>/.claude/hooks/log-prompt.mjs" "<VAULT>"`
+   - Windowsでもパス区切りは `/` を使う（`\` は経由するシェルによってエスケープとして食われる）。
+   - `set VAR=... && ...`（cmd構文）や `VAR=... cmd`（sh構文）でHookに環境変数を渡さないこと。Hookを実行するシェルはOSと一致するとは限らず、Windowsでは Git Bash 経由になるため cmd構文の `set` が黙って無視され、ログが出ないまま失敗する。
+   - `40_運用/log.md` に書かれる形（1依頼につき3行。追記のみで既存行は書き換えない）：
+     - `- 2026-07-25 15:16　[プロジェクト名#セッションID先頭4桁]`
+     - `    - 依頼: 送信したプロンプト（500字で打ち切り）`
+     - `    - 結果: (15:20) 最終応答のテキスト（400字で打ち切り）`
+   - thinking とサブエージェント（isSidechain）の出力は結果に含めない。対応する依頼が記録されていない場合は結果行を書かない（並行セッションでも依頼と結果が識別子で対応付く）。
    - 変更前に settings.json の差分を見せて、承認を得てから書き込む。
    - 「ログを取らない」を選んだら、この手順は飛ばす。
 
