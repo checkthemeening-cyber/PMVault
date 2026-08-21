@@ -137,3 +137,8 @@ tags: [log]
   - `C:\Users\check\.claude\skills\adl-deck-v3\SKILL.md` を新規作成（キット本体は `スライド生成/adl-deck-kit-v3` を絶対パス参照、複製はしない）。
   - `00_ナレッジ/concepts/スライド生成キット.md` を更新：3方式→4方式に拡張し、`adl-deck-kit-v3` の位置づけ（テンプレ準拠を厳密に求めるとき・納品密度が要るときの優先候補）と、既存 `adl-slide` Skill（`adl-pptmaster-kit` 使用）とのトリガー重複時の優先順位を追記。
   - 既存の `adl-slide` Skillはそのまま維持（削除・上書きはしていない）。両者の使い分けはユーザー判断に委ねる。
+
+## 2026-08-21（続き）
+- ユーザー指示によりSkill名を修正：`adl-deck-v3` → `adl-slidev2`。
+  - `C:\Users\check\.claude\skills\adl-deck-v3` を `C:\Users\check\.claude\skills\adl-slidev2` にリネームし、`SKILL.md` 内のfrontmatter `name`・見出し・トリガー語・自己参照をすべて `adl-slidev2` に置換（キット本体のフォルダ名 `adl-deck-kit-v3` 自体は変更していない）。
+  - `00_ナレッジ/concepts/スライド生成キット.md` のSkill名・パス参照も `adl-slidev2` に更新。
